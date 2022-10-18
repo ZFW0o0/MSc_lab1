@@ -72,3 +72,82 @@ void display_board(const char board[9][9]) {
 }
 
 /* add your functions here */
+/* is_complete(board) takes a 9 × 9 array of characters representing a Sudoku
+   board and returns true if all board positions are occupied by digits, and false
+   otherwise */
+bool is_complete(char board[9][9])
+{
+  /* a nested for loop that goes over all the elements in the two-dimension board array and
+  returns false whenever the element is a "."  */
+  for (int r = 0; r < 9; r++)
+  {
+    for (int c = 0; c < 9; c++)
+    {
+      if (board[r][c] == ".")
+      {
+	return false;
+      } 
+    } 
+  }
+  
+  /* after going over all the elements in the array and no "." is found, the board should 
+     be complete and so return true */
+  return true;
+}
+
+/*make_move(position, digit, board) attempts to place a character type digit (from 1 to 9)
+  onto a Sudoku board (9*9 character array) at a given position, position denoted by a 
+  two-character string showing row (A to I) and column (1 to 9) coordinates (e.g. I8 means
+  row I and column 8)  */
+bool make_move(const char* position,char digit,char board[9][9])
+{
+  /*  return false if the position string is not a two-character string, or if position is 
+      out of the range of the sudoku board  */
+  int pos_length;
+  pos_length = position.length();
+  if (pos_length != 2)
+  {
+    return false;
+  }
+  
+  if (position[0] < 'A' || position[0] > 'I')
+  {
+    return false;
+  }
+
+  if (position[1] < '1' || position[1] > '9')
+  {
+    return false;
+  }
+  
+  /* return false if placing the digit at the position would lead to more than one copy of the
+   same digit in the same row */
+  /* covert character row coordinate to integer row number, e.g. 'B' converts to 1 */
+  int row;
+  row = position[0] - 'A';
+  for (int i = 0; i < 9; i++)
+  {
+    if (board[row][i] == digit)
+    {
+      return false;
+    }
+  }
+
+  /* return false if placing the digit at the position would lead to more than one copy of the
+     same digit in the same column */
+  /* covert character column coordinate to integer column number, e.g. '3' converts to 2 */
+  int column;
+  column = position[1] - '1';
+  for (int i = 0; i < 9; i++)
+  {
+    if(board[i][column] == digit)
+    {
+      return false;
+    }
+  }
+
+  /* return false if placing the digit at the position would lead to more than one copy of the
+     same digit in the same 3*3 sub-boards */
+  
+
+} 
