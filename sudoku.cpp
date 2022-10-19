@@ -120,11 +120,15 @@ bool make_move(const char* position,char digit,char board[9][9])
     return false;
   }
   
-  /* return false if placing the digit at the position would lead to more than one copy of the
-   same digit in the same row */
   /* covert character row coordinate to integer row number, e.g. 'B' converts to 1 */
+  /* covert character column coordinate to integer column number, e.g. '3' converts to 2 */
   int row;
   row = position[0] - 'A';
+  int column;
+  column = position[1] - '1';
+
+  /* return false if placing the digit at the position would lead to more than one copy of the
+   same digit in the same row */
   for (int i = 0; i < 9; i++)
   {
     if (board[row][i] == digit)
@@ -135,12 +139,9 @@ bool make_move(const char* position,char digit,char board[9][9])
 
   /* return false if placing the digit at the position would lead to more than one copy of the
      same digit in the same column */
-  /* covert character column coordinate to integer column number, e.g. '3' converts to 2 */
-  int column;
-  column = position[1] - '1';
   for (int i = 0; i < 9; i++)
   {
-    if(board[i][column] == digit)
+    if (board[i][column] == digit)
     {
       return false;
     }
@@ -148,6 +149,24 @@ bool make_move(const char* position,char digit,char board[9][9])
 
   /* return false if placing the digit at the position would lead to more than one copy of the
      same digit in the same 3*3 sub-boards */
-  
+  /* sub_row represents the row number of the position in the sub-board it is located in,
+     similarly, sub_column represents the column number in the sub-board. */
+  int sub_row = row % 3;
+  int sub_column = column % 3;
+  /* the nested for loop walks through all the elements in the 3*3 sub-board of the position */ 
+  for (int i = 0; i < 3; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
+      if (board[row - sub_row + i][column - sub_column + j] == digit)
+      {
+	return false;
+      }     
+    }
+  }
 
+  /* update the board array to reflect the placing of digit at position. */
+  board[row][column] = digit;
+
+  return true;
 } 
