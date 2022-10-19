@@ -119,6 +119,12 @@ bool make_move(const char* position,char digit,char board[9][9])
   {
     return false;
   }
+
+  /* returns false if the digit is not between 1-9 */
+  if ((digit - '1') < 0 || (digit - '1') > 9)
+  {
+    return false;
+  }
   
   /* covert character row coordinate to integer row number, e.g. 'B' converts to 1 */
   /* covert character column coordinate to integer column number, e.g. '3' converts to 2 */
@@ -126,6 +132,12 @@ bool make_move(const char* position,char digit,char board[9][9])
   row = position[0] - 'A';
   int column;
   column = position[1] - '1';
+
+  /* return false if the position already has a digit */
+  if (board[row][column] != '.')
+  {
+    return false
+  }
 
   /* return false if placing the digit at the position would lead to more than one copy of the
    same digit in the same row */
@@ -169,4 +181,42 @@ bool make_move(const char* position,char digit,char board[9][9])
   board[row][column] = digit;
 
   return true;
-} 
+}
+
+bool save_board(const char* filename, char board[9][9])
+{
+  ofstream out(filename);
+  for (int i = 0; i < 9; i++)
+  {
+    for (int j = 0; j < 9; j++)
+    {
+      out << board[i][j];
+    }
+    out << endl;
+  }
+
+  /* check whether file was successfully written. use load_board() to read the file that was
+   written and check if the output_board array created by load_board() is the same as the 
+  board array argument passed into save_board() function */
+  char output_board[9][9];
+  load_board(filename, output_board);
+  for (int i = 0; i < 9; i++)
+  {
+    for (int j = 0; j < 9; j++)
+    {
+      if (output_board[i][j] != board[i][j])
+      {
+	return false;
+      }
+    }
+  }
+  
+  return true;
+
+}
+
+bool solve_board(char board[9][9])
+{
+  
+
+}
