@@ -75,7 +75,7 @@ void display_board(const char board[9][9]) {
 /* is_complete(board) takes a 9 × 9 array of characters representing a Sudoku
    board and returns true if all board positions are occupied by digits, and false
    otherwise */
-bool is_complete(char board[9][9])
+bool is_complete(const char board[9][9])
 {
   /* a nested for loop that goes over all the elements in the two-dimension board array and
   returns false whenever the element is a "."  */
@@ -183,6 +183,13 @@ bool make_move(const char* position,char digit,char board[9][9])
   return true;
 }
 
+/* save_board outputs the two-dimensional character array board to a file with name filename.
+ 
+ *@param filename, cstring for the file path to which to write board
+ *@param board, array that stores the digits in sudoku board  
+ *return: true if the file was successfully written, false otherwise
+*/
+
 bool save_board(const char* filename, char board[9][9])
 {
   ofstream out(filename);
@@ -195,9 +202,11 @@ bool save_board(const char* filename, char board[9][9])
     out << endl;
   }
 
-  /* check whether file was successfully written. use load_board() to read the file that was
-   written and check if the output_board array created by load_board() is the same as the 
-  board array argument passed into save_board() function */
+/* check whether file was successfully written.
+   use load_board() to read the file that was written to 
+   check if the output_board array created by load_board() is the same as the 
+   board array argument passed into save_board() function
+*/
   char output_board[9][9];
   load_board(filename, output_board);
   for (int i = 0; i < 9; i++)
@@ -215,8 +224,49 @@ bool save_board(const char* filename, char board[9][9])
 
 }
 
+/* solve board() attempts to solve the Sudoku puzzle in input/output parameter board. 
+ * use brute-force search to go over the empty grids in a sudoku board
+ * try placing 1 at an empty grid
+ * check for violation (no same digit in same row,column and sub-board)
+ * if no violation move on to next empty grid
+ * if there is violation, increase the digit by 1 and check for violation again.
+ * if no valid digit from 1 to 9, leave grid blank, go back to previous grid  
+ * repeat until the last grid  
+
+ *@param board, unsolved sudoku board
+
+ *return true if there is a solution for the sudoku, false otherwise.
+
+ */
 bool solve_board(char board[9][9])
 {
+  int row;
+  int column;
+  char position[3];
+  position[0] = 'A' + row;
+  position[1] = '1' + column;
+  position[2] = '\0';
+
+  if (is_complete(board))
+  {
+    return true;
+  }
+  for (row = 0; row < 9; row++){
+    
+
+  }
+  if (board[row][column] == '.')
+  {
+    char digit = '1';
+    while (!make_move(position, digit, board) && digit <= '9' )
+    {
+      digit = digit + 1;
+    }
+    
+
+  }
   
 
+  
 }
+
