@@ -83,7 +83,7 @@ bool is_complete(const char board[9][9])
   {
     for (int c = 0; c < 9; c++)
     {
-      if (board[r][c] == ".")
+      if (board[r][c] > '9' || board[r][c] < '1')
       {
 	return false;
       } 
@@ -238,35 +238,88 @@ bool save_board(const char* filename, char board[9][9])
  *return true if there is a solution for the sudoku, false otherwise.
 
  */
-bool solve_board(char board[9][9])
+
+/* coord_convert converts interger row and column number to string coordinate  */
+string coord_convert(int row, int column)
 {
-  int row;
-  int column;
-  char position[3];
+  char position[3]; 
   position[0] = 'A' + row;
   position[1] = '1' + column;
   position[2] = '\0';
 
-  if (is_complete(board))
+  return position;
+}
+
+/*digit_convert converts integer digit to char digit */
+char digit_covert(int number)
+{
+  char digit;
+  digit = '0' + number;
+
+  return digit;
+}
+
+/* back_tracking() attempts to solve the Sudoku puzzle in input/output parameter board. 
+ * use brute-force search to go over the empty grids in a sudoku board
+ * try placing 1 at an empty grid
+ * check for violation (no same digit in same row,column and sub-board)
+ * if no violation move on to next empty grid
+ * if there is violation, increase the digit by 1 and check for violation again.
+ * if no valid digit from 1 to 9, leave grid blank, go back to previous grid  
+ * repeat until the last grid  
+
+ *@param board, unsolved sudoku board
+ *@param row, column, the coordinate of the grid  
+
+ *return true if there is a solution for the sudoku, false otherwise.
+
+ */
+bool back_tracking(char board[9][9],int row,int column)
+{
+  if (column == 9)
+  {
+    row++;
+    column = 0;
+  }
+  if (row = 9)
   {
     return true;
   }
-  for (row = 0; row < 9; row++){
-    
-
-  }
   if (board[row][column] == '.')
   {
-    char digit = '1';
-    while (!make_move(position, digit, board) && digit <= '9' )
-    {
-      digit = digit + 1;
-    }
+    back_tracking(board, row, column + 1);
+  }
     
+  for (int i = 1; i <= 9; i++)
+  {
+    position = coord_convert(row, column);
+    digit = digit_convert(i);
+    if (make_move(position, digit, board))
+    {
+      board[row][column] = i;
+      if (back_tracking(board, row, column + 1))
+      {
+	return true;
+      }
+      board[row][column] = '.'
+    }
 
   }
-  
 
+  return false;
   
+}
+
+/*solve_board implements back_tracking() and return true if solvable */ 
+bool solve_board(char board[9][9])
+{
+  if (back_tracking(board, 0, 0))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
