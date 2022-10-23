@@ -224,20 +224,6 @@ bool save_board(const char* filename, char board[9][9])
 
 }
 
-/* solve board() attempts to solve the Sudoku puzzle in input/output parameter board. 
- * use brute-force search to go over the empty grids in a sudoku board
- * try placing 1 at an empty grid
- * check for violation (no same digit in same row,column and sub-board)
- * if no violation move on to next empty grid
- * if there is violation, increase the digit by 1 and check for violation again.
- * if no valid digit from 1 to 9, leave grid blank, go back to previous grid  
- * repeat until the last grid  
-
- *@param board, unsolved sudoku board
-
- *return true if there is a solution for the sudoku, false otherwise.
-
- */
 
 /* coord_convert converts interger row and column number to string coordinate  */
 string coord_convert(int row, int column)
@@ -265,17 +251,21 @@ char digit_covert(int number)
  * check for violation (no same digit in same row,column and sub-board)
  * if no violation move on to next empty grid
  * if there is violation, increase the digit by 1 and check for violation again.
- * if no valid digit from 1 to 9, leave grid blank, go back to previous grid  
+ * if no valid digit from 1 to 9, leave grid blank, go back to previous grid 
  * repeat until the last grid  
 
  *@param board, unsolved sudoku board
  *@param row, column, the coordinate of the grid  
 
  *return true if there is a solution for the sudoku, false otherwise.
-
  */
-bool back_tracking(char board[9][9],int row,int column)
+
+
+int back_tracking(char board[9][9],int row,int column)
 {
+  static int count = 0; /*count records number of move making attempts, 
+  			  greater count means harder sudoku */
+  bool valid; 
   if (column == 9)
   {
     row++;
@@ -283,9 +273,9 @@ bool back_tracking(char board[9][9],int row,int column)
   }
   if (row = 9)
   {
-    return true;
+    return count;
   }
-  if (board[row][column] == '.')
+  if (board[row][column] != '.')
   {
     back_tracking(board, row, column + 1);
   }
@@ -297,20 +287,21 @@ bool back_tracking(char board[9][9],int row,int column)
     if (make_move(position, digit, board))
     {
       board[row][column] = i;
+      count++;         /* records number of move making attempts, 
+			   greater count means harder sudoku */
       if (back_tracking(board, row, column + 1))
       {
-	return true;
+	return count;
       }
       board[row][column] = '.'
     }
 
   }
 
-  return false;
-  
+  return 0;  
 }
 
-/*solve_board implements back_tracking() and return true if solvable */ 
+/*solve_board implements back_tracking() and return true if sudoku is solvable */ 
 bool solve_board(char board[9][9])
 {
   if (back_tracking(board, 0, 0))
@@ -323,3 +314,13 @@ bool solve_board(char board[9][9])
   }
 }
 
+/* count_attempt() is called in back_tracking() whenever there is a 
+successful make move, count records number of move making attempts, 
+greater count means harder sudoku */
+int count_attempt()
+{
+  static int count = 0;
+
+  count++;
+  return count; 
+}

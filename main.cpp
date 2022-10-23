@@ -84,6 +84,19 @@ int main() {
   cout << "=================== Question 5 ===================\n\n";
 
   // write more tests
+  load_board("mystery1.dat", board);
+  if (solve_board(board))
+  {
+    cout << "The 'mystery1' board has a solution:\n";
+    cout << "make_move count:" << back_tracking(board, 0, 0)<< endl;
+  }
+  else {
+    cout << "A solution cannot be found for 'mystery1'.\n";
+  }
+
+  
+  
+  cout << number of 
 
   return 0;
 }
