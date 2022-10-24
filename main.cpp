@@ -79,7 +79,7 @@ int main() {
   }
   cout << '\n';
 
-  // write more tests
+  // write more tests 
 
   cout << "=================== Question 5 ===================\n\n";
 
@@ -89,14 +89,41 @@ int main() {
   {
     cout << "The 'mystery1' board has a solution:\n";
     cout << "make_move count:" << back_tracking(board, 0, 0)<< endl;
+    display_board(board);
+    cout << endl;
   }
   else {
-    cout << "A solution cannot be found for 'mystery1'.\n";
+    cout << "A solution cannot be found for 'mystery1'.\n\n";
   }
 
   
-  
-  cout << number of 
+  load_board("mystery2.dat", board);
+  if (solve_board(board))
+  {
+    cout << "The 'mystery2' board has a solution:\n";
+    cout << "make_move count:" << back_tracking(board, 0, 0)<< endl;
+    display_board(board);
+    cout << endl;
+  }
+  else {
+    cout << "A solution cannot be found for 'mystery2'.\n\n";
+  }
 
+  
+  load_board("mystery3.dat", board);
+  if (solve_board(board))
+  {
+    cout << "The 'mystery3' board has a solution:\n";
+    cout << "make_move count:" << back_tracking(board, 0, 0)<< endl;
+    display_board(board);
+    cout << endl; 
+  }
+  else {
+    cout << "A solution cannot be found for 'mystery3'.\n\n";
+  }
+
+  
+
+ 
   return 0;
 }

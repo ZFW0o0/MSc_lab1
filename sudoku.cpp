@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cassert>
+#include <string>
 #include "sudoku.h"
 
 using namespace std;
@@ -99,7 +100,7 @@ bool is_complete(const char board[9][9])
   onto a Sudoku board (9*9 character array) at a given position, position denoted by a 
   two-character string showing row (A to I) and column (1 to 9) coordinates (e.g. I8 means
   row I and column 8)  */
-bool make_move(const char* position,char digit,char board[9][9])
+bool make_move(const string position,char digit,char board[9][9])
 {
   /*  return false if the position string is not a two-character string, or if position is 
       out of the range of the sudoku board  */
@@ -136,7 +137,7 @@ bool make_move(const char* position,char digit,char board[9][9])
   /* return false if the position already has a digit */
   if (board[row][column] != '.')
   {
-    return false
+    return false;
   }
 
   /* return false if placing the digit at the position would lead to more than one copy of the
@@ -226,7 +227,7 @@ bool save_board(const char* filename, char board[9][9])
 
 
 /* coord_convert converts interger row and column number to string coordinate  */
-string coord_convert(int row, int column)
+std::string coord_convert(int row, int column)
 {
   char position[3]; 
   position[0] = 'A' + row;
@@ -237,7 +238,7 @@ string coord_convert(int row, int column)
 }
 
 /*digit_convert converts integer digit to char digit */
-char digit_covert(int number)
+char digit_convert(int number)
 {
   char digit;
   digit = '0' + number;
@@ -260,40 +261,38 @@ char digit_covert(int number)
  *return true if there is a solution for the sudoku, false otherwise.
  */
 
-
 int back_tracking(char board[9][9],int row,int column)
 {
-  static int count = 0; /*count records number of move making attempts, 
-  			  greater count means harder sudoku */
-  bool valid; 
+  static int count = 1; /*count records number of move making attempts, 
+  //			  greater count means harder sudoku */ 
   if (column == 9)
   {
-    row++;
-    column = 0;
+    return back_tracking(board, row+1, 0);
   }
-  if (row = 9)
+  if (row == 9)
   {
     return count;
   }
   if (board[row][column] != '.')
   {
-    back_tracking(board, row, column + 1);
+    return back_tracking(board, row, column + 1);
   }
     
   for (int i = 1; i <= 9; i++)
   {
+    string position;
+    char digit;
     position = coord_convert(row, column);
     digit = digit_convert(i);
     if (make_move(position, digit, board))
     {
-      board[row][column] = i;
-      count++;         /* records number of move making attempts, 
-			   greater count means harder sudoku */
+      count++; /* records number of move making attempts */
+      
       if (back_tracking(board, row, column + 1))
       {
 	return count;
       }
-      board[row][column] = '.'
+      board[row][column] = '.';
     }
 
   }
@@ -304,23 +303,7 @@ int back_tracking(char board[9][9],int row,int column)
 /*solve_board implements back_tracking() and return true if sudoku is solvable */ 
 bool solve_board(char board[9][9])
 {
-  if (back_tracking(board, 0, 0))
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
+  return back_tracking(board, 0, 0);
 }
 
-/* count_attempt() is called in back_tracking() whenever there is a 
-successful make move, count records number of move making attempts, 
-greater count means harder sudoku */
-int count_attempt()
-{
-  static int count = 0;
 
-  count++;
-  return count; 
-}
