@@ -1,1 +1,7 @@
 Summarise your findings here (see specification).
+
+*mystery1 and mystery3 are solvable, mystery 2 is impossible to solve
+
+*mystery1 is of "extremely hard" difficulty.
+
+*mystery3 is of "hard" difficulty.

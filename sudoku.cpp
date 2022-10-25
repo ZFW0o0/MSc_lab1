@@ -74,7 +74,10 @@ void display_board(const char board[9][9]) {
 
 /* add your functions here */
 /* is_complete(board) takes a 9 × 9 array of characters representing a Sudoku
-   board and returns true if all board positions are occupied by digits, and false
+   board
+ *@param board is the array that represents the sudoku board. 
+   
+ *returns true if all board positions are occupied by digits, and false
    otherwise */
 bool is_complete(const char board[9][9])
 {
@@ -96,10 +99,13 @@ bool is_complete(const char board[9][9])
   return true;
 }
 
-/*make_move(position, digit, board) attempts to place a character type digit (from 1 to 9)
-  onto a Sudoku board (9*9 character array) at a given position, position denoted by a 
-  two-character string showing row (A to I) and column (1 to 9) coordinates (e.g. I8 means
-  row I and column 8)  */
+/*make_move(position, digit, board) attempts to place a character type digit 
+(from 1 to 9) onto a Sudoku board (9*9 character array) at a given position, 
+ position denoted by a two-character string showing row (A to I) and column 
+ (1 to 9) coordinates (e.g. I8 means row I and column 8) 
+
+ *return true if it is legal to place the digit at the given position, false otherwise.
+ */
 bool make_move(const string position,char digit,char board[9][9])
 {
   /*  return false if the position string is not a two-character string, or if position is 
@@ -258,26 +264,32 @@ char digit_convert(int number)
  *@param board, unsolved sudoku board
  *@param row, column, the coordinate of the grid  
 
- *return true if there is a solution for the sudoku, false otherwise.
+ *return number of make_moves if there is a solution for the sudoku, 0 otherwise.
  */
 
 int back_tracking(char board[9][9],int row,int column)
 {
-  static int count = 1; /*count records number of move making attempts, 
-  //			  greater count means harder sudoku */ 
+  static int count = 1; /*count records number of make_move attempts, 
+  			  greater count means harder sudoku */ 
   if (column == 9)
   {
+    //when reach the end of the row, move to next row. 
     return back_tracking(board, row+1, 0);
   }
   if (row == 9)
   {
+    //when reach the end of the board, return make_move count. 
     return count;
   }
   if (board[row][column] != '.')
   {
+    //if the position is not vacant, go to the next position and solve.
     return back_tracking(board, row, column + 1);
   }
-    
+  
+  /*for a vacant position, test writing digit into it from 1 to 9, if writing a 
+    digit causes failure in subsequent board solution, erase the written digit 
+    in the position and subsequent positions and retry the for loop */    
   for (int i = 1; i <= 9; i++)
   {
     string position;
@@ -286,7 +298,7 @@ int back_tracking(char board[9][9],int row,int column)
     digit = digit_convert(i);
     if (make_move(position, digit, board))
     {
-      count++; /* records number of move making attempts */
+      count++; /* records number of make_move attempts */
       
       if (back_tracking(board, row, column + 1))
       {
