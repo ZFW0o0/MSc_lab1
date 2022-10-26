@@ -14,8 +14,9 @@ bool make_move(const string position,char digit,char board[9][9]);
 bool save_board(const char* filename, char board[9][9]);
 string coord_convert(int row, int column);
 char digit_convert(int number);
-int back_tracking(char board[9][9],int row,int column);
 bool solve_board(char board[9][9]);
+bool back_tracking(char board[9][9],int row,int column, int &recursion_count);
+
 
 
 #endif

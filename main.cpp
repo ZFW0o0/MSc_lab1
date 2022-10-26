@@ -46,9 +46,25 @@ int main() {
   }
   cout << "a valid move. The board is:\n";
   display_board(board);
+  cout << endl;
 
   // write more tests
+  // should be invalid as Z8 is an invalid position
+  load_board("easy.dat", board);
+  cout << "Putting '1' into Z8 is ";
+  if (!make_move("Z8", '1', board)) {
+    cout << "NOT ";
+  }
+  cout << "a valid move.\n\n";
 
+  // should be invalid as '0' can not be filled into a sudoku board
+  load_board("easy.dat", board);
+  cout << "Putting '0' into I8 is ";
+  if (!make_move("I8", '0', board)) {
+    cout << "NOT ";
+  }
+  cout << "a valid move.\n\n";
+ 
   cout << "=================== Question 3 ===================\n\n";
 
   load_board("easy.dat", board);
@@ -61,9 +77,10 @@ int main() {
 
   cout << "=================== Question 4 ===================\n\n";
 
+  
   load_board("easy.dat", board);
   if (solve_board(board)) {
-    cout << "The 'easy' board has a solution:\n";
+    cout << "The 'easy' board has a solution:\n";                                 
     display_board(board);
   } else {
     cout << "A solution cannot be found.\n";
@@ -72,7 +89,7 @@ int main() {
 
   load_board("medium.dat", board);
   if (solve_board(board)) {
-    cout << "The 'medium' board has a solution:\n";
+    cout << "The 'medium' board has a solution:\n"; 
     display_board(board);
   } else {
     cout << "A solution cannot be found.\n";
@@ -84,11 +101,11 @@ int main() {
   cout << "=================== Question 5 ===================\n\n";
 
   // write more tests
+  // solve mystery1, display solved board if solvable and report failure if not solvable. 
   load_board("mystery1.dat", board);
   if (solve_board(board))
   {
     cout << "The 'mystery1' board has a solution:\n";
-    cout << "make_move count:" << back_tracking(board, 0, 0)<< endl;
     display_board(board);
     cout << endl;
   }
@@ -96,12 +113,11 @@ int main() {
     cout << "A solution cannot be found for 'mystery1'.\n\n";
   }
 
-  
+  // solve mystery2, display solved board if solvable and report failure if not solvable. 
   load_board("mystery2.dat", board);
   if (solve_board(board))
   {
     cout << "The 'mystery2' board has a solution:\n";
-    cout << "make_move count:" << back_tracking(board, 0, 0)<< endl;
     display_board(board);
     cout << endl;
   }
@@ -109,20 +125,17 @@ int main() {
     cout << "A solution cannot be found for 'mystery2'.\n\n";
   }
 
-  
+  // solve mystery3, display solved board if solvable and report failure if not solvable
   load_board("mystery3.dat", board);
   if (solve_board(board))
   {
     cout << "The 'mystery3' board has a solution:\n";
-    cout << "make_move count:" << back_tracking(board, 0, 0)<< endl;
     display_board(board);
     cout << endl; 
   }
   else {
     cout << "A solution cannot be found for 'mystery3'.\n\n";
   }
-
-  
 
  
   return 0;

@@ -116,18 +116,18 @@ bool make_move(const string position,char digit,char board[9][9])
   {
     return false;
   }
-  
+
+  // return false if the position is out of range
   if (position[0] < 'A' || position[0] > 'I')
   {
     return false;
   }
-
   if (position[1] < '1' || position[1] > '9')
   {
     return false;
   }
 
-  /* returns false if the digit is not between 1-9 */
+  // returns false if the digit is not between 1-9 
   if ((digit - '1') < 0 || (digit - '1') > 9)
   {
     return false;
@@ -263,33 +263,36 @@ char digit_convert(int number)
 
  *@param board, unsolved sudoku board
  *@param row, column, the coordinate of the grid  
+ *@param recursion_count, initially set to 0, incremented in the function whenever  
+  there is a successful make_move, passed by reference so incremented count can be
+  passed over to the the recursive function calls.   
 
- *return number of make_moves if there is a solution for the sudoku, 0 otherwise.
+ *return true if there is a solution for the sudoku, false otherwise.
  */
-
-int back_tracking(char board[9][9],int row,int column)
+bool back_tracking(char board[9][9],int row,int column, int &recursion_count)
 {
-  static int count = 1; /*count records number of make_move attempts, 
-  			  greater count means harder sudoku */ 
+   
   if (column == 9)
   {
     //when reach the end of the row, move to next row. 
-    return back_tracking(board, row+1, 0);
+    return back_tracking(board, row+1, 0, recursion_count);
   }
   if (row == 9)
   {
     //when reach the end of the board, return make_move count. 
-    return count;
+    return true;
   }
   if (board[row][column] != '.')
   {
     //if the position is not vacant, go to the next position and solve.
-    return back_tracking(board, row, column + 1);
+    return back_tracking(board, row, column + 1, recursion_count);
   }
   
   /*for a vacant position, test writing digit into it from 1 to 9, if writing a 
-    digit causes failure in subsequent board solution, erase the written digit 
-    in the position and subsequent positions and retry the for loop */    
+    digit causes failure in subsequent board solution, i.e., none of the digits from 1-9
+    can be filled into a grid, erase the written digit in the position 
+    and subsequent positions and redo the for loop for the position, if none of the digits
+    from 1-9 can be filled for the first vacant grid, the sudoku has no solution*/    
   for (int i = 1; i <= 9; i++)
   {
     string position;
@@ -298,24 +301,29 @@ int back_tracking(char board[9][9],int row,int column)
     digit = digit_convert(i);
     if (make_move(position, digit, board))
     {
-      count++; /* records number of make_move attempts */
+      recursion_count++; // records number of make_move attempts 
       
-      if (back_tracking(board, row, column + 1))
+      if (back_tracking(board, row, column + 1, recursion_count))
       {
-	return count;
+	return true;
       }
       board[row][column] = '.';
     }
 
   }
-
-  return 0;  
+  
+  //if no solution to the sudoku can be found, the function return false
+  return false;  
 }
 
 /*solve_board implements back_tracking() and return true if sudoku is solvable */ 
 bool solve_board(char board[9][9])
 {
-  return back_tracking(board, 0, 0);
+  /* variable to record the number of make_move to solve one sudoku board.
+  the larger count gets, the more trials-and-errors it takes to solve a sudoku board. */
+  int count = 0;
+  bool a; //a is assigned true if sudoku solvable and false otherwise.
+  a = back_tracking(board, 0, 0, count);
+  //cout << "make_move count: " << count << endl;
+  return a;
 }
-
-
